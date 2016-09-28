@@ -145,6 +145,10 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Data\LaughingDataModel.cs" />
+    <Compile Include="Dialogs\EmotionDialog.cs" />
+    <Compile Include="Dialogs\GreetingDialog.cs" />
+    <Compile Include="Dialogs\ResultDialog.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
