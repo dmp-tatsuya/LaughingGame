@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
+using Microsoft.Bot.Builder.Dialogs;
 using Newtonsoft.Json;
 using Microsoft.ProjectOxford.Emotion;
 using Microsoft.ProjectOxford.Emotion.Contract;
@@ -21,28 +22,6 @@ namespace LaughingGame
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
-        public virtual async Task<HttpResponseMessage> Post([FromBody] Activity activity)
-        {
-
-            // メッセージやり取りを行う ConnectorClient を生成
-            ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-
-            // Emotion API の Subscription Key をセット
-            // Emotion API を Call する EmotionServiceClient を生成
-            // 入力値(URL) を元に Emotion API を Call
-            // ※次以降の項目で作成します
-
-            // デフォルトの返答 (初回、または写真判定ができなかったとき))
-            Activity reply = activity.CreateReply("顔の表情を判定します。写真のURLを送ってね。");
-
-            // Call 結果を元に 返答を作成
-            // ※次以降の項目で作成します
-
-            // メッセージ、および http ステータス Accepted(=200) を返答
-            await connector.Conversations.ReplyToActivityAsync(reply);
-            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
-
-        }
         public virtual async Task<HttpResponseMessage> Post([FromBody] Activity activity)
         {
 
@@ -79,16 +58,16 @@ namespace LaughingGame
 
                 //取得したスコアを KeyValuePair に代入、スコア数値の大きい順に並び替える
                 IEnumerable<KeyValuePair<string, float>> emotionList = new Dictionary<string, float>()
-        {
-            { "怒ってる", emotionScores.Anger},
-            { "軽蔑してる", emotionScores.Contempt },
-            { "うんざりしてる", emotionScores.Disgust },
-            { "怖がってる", emotionScores.Fear },
-            { "楽しい", emotionScores.Happiness},
-            { "特になし", emotionScores.Neutral},
-            { "悲しい", emotionScores.Sadness },
-            { "驚いてる", emotionScores.Surprise}
-        }
+                {
+                    { "怒ってる", emotionScores.Anger},
+                    { "軽蔑してる", emotionScores.Contempt },
+                    { "うんざりしてる", emotionScores.Disgust },
+                    { "怖がってる", emotionScores.Fear },
+                    { "楽しい", emotionScores.Happiness},
+                    { "特になし", emotionScores.Neutral},
+                    { "悲しい", emotionScores.Sadness },
+                    { "驚いてる", emotionScores.Surprise}
+                }
                 .OrderByDescending(kv => kv.Value)
                 .ThenBy(kv => kv.Key)
                 .ToList();
@@ -108,6 +87,8 @@ namespace LaughingGame
             // メッセージ、および http ステータス Accepted(=200) を返答
             await connector.Conversations.ReplyToActivityAsync(reply);
             return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
+
+        }
 
 
         private Activity HandleSystemMessage(Activity message)
